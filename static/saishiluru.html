@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>赛事详情</title>
+    <script src="./js/jquery-1.11.2.min.js"></script>
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/vue-resource.min.js"></script>
+    <link rel="stylesheet" href="./css/weui.min.css"/>
+    <script>
+    function showError(resp){
+      resp.json().then(function(result){
+        console.log("Error:"+result.message);
+      })
+    };
+$(document).ready(function(){
+  var ss = new Vue({
+    el:"#saishixiangqing",
+    data:{
+      saishi:{
+        name:"",
+        description:"",
+      },
+      desc_count:0
+    },
+    created:function(){
+      this.init();
+    },
+    methods:{
+      create:function(){
+        var that = this;
+        that.$resource("/api/saishi").save(this.$data.saishi).then(function(resp){
+          alert("保存成功！");
+        },function(resp){
+          showError(resp);
+        });
+      },
+      countchange:function(e){
+        var that = this;
+        debugger;
+        var text = e.target.value;
+        this.desc_count = text.length;
+      },
+      init:function(){
+        this.desc_count = this.saishi.description.length;
+      }
+    }
+  });
+  window.ss = ss;
+});
+    </script>
+    <style>
+    .page__bd_spacing{
+      padding:15px 15px;
+    }
+    </style>
+</head>
+<body ontouchstart>
+<div class="page"  id="saishixiangqing">
+  <div class="page__body">
+    <div class="weui-cells__title">赛事名称</div>
+    <div class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入文本" v-model="saishi.name"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="weui-cells__title">赛事描述</div>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <textarea class="weui-textarea" placeholder="请输入文本" rows="3" v-model="saishi.description" v-on:keyup="countchange"></textarea>
+                <div class="weui-textarea-counter"><span v-text="desc_count"></span>/200</div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+  <div class="page__bd page__bd_spacing">
+    <a href="javascript:void(0)" v-on:click.prevent="create" class="weui-btn weui-btn_primary">提交赛事</a>
+  </div>
+</div>
+</body>

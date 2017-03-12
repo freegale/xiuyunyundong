@@ -1,0 +1,13 @@
+<html>
+<head>
+<script>
+var myws = new WebSocket('ws://localhost:3000/');
+myws.onmessage=function(msg){console.log(msg)};
+myws.onopen=function(){
+    console.log("[CLIENT]send message：");
+    myws.send("hello");
+};
+</script>
+</head>
+<body></body>
+</html>

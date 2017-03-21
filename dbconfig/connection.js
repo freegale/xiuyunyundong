@@ -42,6 +42,10 @@ let defineModel = (name, attributes) => {
         type: ID_TYPE,
         primaryKey: true
     };
+    attrs.creator = {
+        type: Sequelize.STRING,
+        allowNull: true
+    };
     attrs.createdAt = {
         type: Sequelize.BIGINT,
         allowNull: false

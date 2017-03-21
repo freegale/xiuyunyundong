@@ -25,9 +25,8 @@ let addMapping = (router,mapping)=>{
 // 读取目录中所有js代表的控制器，并将控制器添加到router中。
 let addController = (router,dir) => {
   fs.readdirSync(__dirname+"/"+dir).filter((f)=>{
-    return f.endsWith(".js")
+    return f.endsWith(".js");
   }).forEach((f)=>{
-    console.log(`Processing controller ${f}...`);
     let mapping = require(__dirname+"/"+dir+"/"+f);
     addMapping(router,mapping);
   });

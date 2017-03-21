@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>赛事详情</title>
+    <script src="./js/common/jquery-1.11.2.min.js"></script>
+    <script src="./js/common/vue.min.js"></script>
+    <script src="./js/common/vue-resource.min.js"></script>
+    <script src="../node_modules/jquery-weui/dist/js/jquery-weui.min.js"></script>
+    <link rel="stylesheet" href="./css/weui.min.css"/>
+    <link rel="stylesheet" href="../node_modules/jquery-weui/dist/css/jquery-weui.min.css"/>
+</head>
+<body ontouchstart>
+<div class="page"  id="saishixiangqing">
+  <div class="page__body">
+    <div class="weui-cells__title">赛事名称</div>
+    <div class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入文本" />
+            </div>
+        </div>
+    </div>
+
+    <div class="weui-cells__title">赛事描述</div>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <textarea class="weui-textarea" placeholder="请输入文本" rows="3" ></textarea>
+                <div class="weui-textarea-counter"><span v-text="desc_count"></span>/200</div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+  <div class="page__bd page__bd_spacing page__bd_btn">
+    <a href="javascript:void(0)" class="weui-btn weui-btn_primary">提交赛事</a>
+  </div>
+</div>
+</body>

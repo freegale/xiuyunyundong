@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>赛事详情</title>
+    <script src="./js/jquery-1.11.2.min.js"></script>
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/vue-resource.min.js"></script>
+    <script src="./js/vue-resource.min.js"></script>
+    <link rel="stylesheet" href="./css/weui.min.css"/>
+    <script>
+  function showError(resp){
+      resp.json().then(function(result){
+        console.log("Error:"+result.message);
+      })
+    };
+$(document).ready(function(){
+  var ss = new Vue({
+    el:"#saishixiangqing",
+    data:{
+      saishi:{
+        name:"",
+        description:"",
+      },
+      desc_count:0
+    },
+    created:function(){
+      this.init();
+    },
+    methods:{
+      create:function(){
+        var that = this;
+        that.$resource("/api/saishi").save(this.$data.saishi).then(function(resp){
+          alert("保存成功！");
+        },function(resp){
+          showError(resp);
+        });
+      },
+      countchange:function(e){
+        var that = this;
+        debugger;
+        var text = e.target.value;
+        this.desc_count = text.length;
+      },
+      init:function(){
+        this.desc_count = this.saishi.description.length;
+      }
+    }
+  });
+  window.ss = ss;
+});
+    </script>
+    <style>
+    .page__bd_spacing{
+      padding:15px 15px;
+    }
+    </style>
+</head>
+<body ontouchstart>
+<div class="page"  id="saishixiangqing">
+  <div class="page__body">
+
+  	<div class="weui-form-preview">
+            <div class="weui-form-preview__hd">
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">比赛名称</label>
+                    <em class="weui-form-preview__value" align="left">2017年本研台球交流赛</em>
+                </div>
+            </div>
+            <div class="weui-form-preview__bd">
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">时间</label>
+                    <span class="weui-form-preview__value" align="left">04-15 8:30 至 04-16 14:00</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">地点</label>
+                    <span class="weui-form-preview__value" align="left">西门外青苹果台球厅</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">参赛人数</label>
+                    <span class="weui-form-preview__value" align="left">已报名3人/不限制名额</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">备注</label>
+                    <span class="weui-form-preview__value" align="left">
+                    	<br>（1）比赛规则采用中国台协颁布的最新的台球规则；
+                    	（2）比赛采用单败淘汰制：初赛第一轮采用3局2胜，决赛采用7局4胜</span>
+                </div>
+            </div>
+            <div class="weui-form-preview__ft">
+                <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:">已报名</a>
+            </div>
+        </div>
+    <div class="weui-cells__title">已报名（3）</div>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <textarea class="weui-textarea" placeholder="请输入备注信息" rows="3"> 刘备、关羽、张飞</textarea></textarea>
+                <div class="weui-textarea-counter"></div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+  <div class="page__bd page__bd_spacing">
+    <a href="javascript:void(0)" class="weui-btn weui-btn_primary"></a>
+  </div>
+</div>
+</body>

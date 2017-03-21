@@ -1,12 +1,11 @@
 "use strict"
-
-const schedule = require("node-schedule");
-const model = require("../model");
+let schedule = require("node-schedule");
+let model = require("../model");
 let weixinapi = require("../api/wechatapi");
 
-let schedulejob = ()=>{
+let schedulejob = async ()=>{
   console.log("请求微信服务器获取Token!");
-  weixinapi.getLatestToken(async function(err,token){
+  await weixinapi.getLatestToken(async function(err,token){
     if(err){
       console.log("从微信服务器获取token失败:"+JSON.stringify(err));
     }else{
@@ -14,7 +13,7 @@ let schedulejob = ()=>{
       let tokens = null;
       let myToken = model.Token;
       tokens = await myToken.findAll();
-      console.log("get Token from DB:"+tokens);
+      console.log("get Token from DB:"+JSON.stringify(tokens[0]));
 
       if(!tokens||tokens.length===0){
         console.log("start create token!");
@@ -32,18 +31,19 @@ let schedulejob = ()=>{
           expiretime:token.expireTime
         },{
           where:{
-            id:id
+            id:tokens[0].id
           }
         });
         console.log("update token complete!");
       }
     }
   });
+  console.log("请求微信服务器获取Token完成！");
 };
 
 console.log("即将启动定时任务...");
 var rule = new schedule.RecurrenceRule();
-rule.minite = 30;
+rule.minute = 30;
 var job = schedule.scheduleJob(rule,schedulejob);
 console.log("定时任务启动完成。每小时第30分钟将执行微信token更新任务！");
 /**

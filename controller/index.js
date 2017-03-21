@@ -2,6 +2,7 @@
 let model = require("../model");
 
 let fn_index = async (ctx, next) => {
+
     ctx.render("index.html",{
       title:"welcome"
     })
@@ -42,11 +43,15 @@ let fn_signin = async (ctx, next) => {
       let value = Buffer.from(JSON.stringify(user)).toString("base64");
       console.log(`set cookie value:${value}`);
       ctx.cookies.set("name",value);
+      ctx.cookies.set("username",name);
+
         // 登录成功:
         ctx.render('login_success.html', {
             title: 'Sign In OK',
             name: email
         });
+
+
     } else {
         // 登录失败:
         ctx.render('login_failed.html', {
@@ -63,7 +68,7 @@ let fn_createUser = async (ctx, next) => {
     // 定义user模型
     let User = model.User;
 
-    (async () => {
+    await (async () => {
         let user = await User.create({
             name: name,
             password:password

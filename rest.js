@@ -9,7 +9,7 @@ module.exports = {
     return async(ctx,next)=>{
       // 如果是rest请求，就为ctx添加rest方法，然后继续执行
       if(ctx.request.path.startsWith(pathPrefix)){
-        console.log("Process API ${ctx.request.method} $(ctx.request.url)...");
+        console.log(`Process API ${ctx.request.method} ${ctx.request.path}...`);
         ctx.rest = (data)=>{
           ctx.response.type = "application/json";
           ctx.response.body = data;
@@ -17,7 +17,7 @@ module.exports = {
         try{
           await next();
         }catch(e){
-          console.log("Processing API Error...");
+          console.log("Processing API Error...:"+JSON.stringify(e));
           ctx.response.status = 400;
           ctx.response.type = "application/json";
           ctx.response.body = {

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>{{ name }}</title>
+    <script src="/static/js/common/jquery-1.11.2.min.js"></script>
+    <script src="/static/js/common/vue.min.js"></script>
+    <script src="/static/js/common/vue-resource.min.js"></script>
+    <script src="/static/js/common/jquery-weui.min.js"></script>
+
+    <script src="/static/js/common/city-picker.min.js"></script>
+    <script src="/static/js/common/swiper.min.js"></script>
+
+    <link rel="stylesheet" href="/static/css/common/weui.min.css" />
+    <link rel="stylesheet" href="/static/css/common/jquery-weui.min.css" />
+    <style>
+        .bd,
+        .weui-agree {
+            background-color: #fbfbfb;
+        }
+
+        .page__bd_btn {
+            padding: 15px;
+        }
+
+        .weui-agree {
+            display: block;
+            font-size: 13px;
+            padding: 0.5em 15px;
+        }
+    </style>
+    <script>
+        function getCookie() {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("%26");
+                theRequest[strs[0].split("=")[0]] = (strs[0].split("=")[1]);
+            }
+            activityId = theRequest["activityId"];
+
+            c_openId = "openId";
+            if (document.cookie.length > 0) {
+                c_start = document.cookie.indexOf(c_openId + "=");
+                if (c_start != -1) {
+                    c_start = c_start + c_openId.length + 1;
+                    c_end = document.cookie.indexOf(";", c_start);
+                    if (c_end == -1)
+                        c_end = document.cookie.length;
+                    var openId = unescape(document.cookie.substring(c_start, c_end)); //通过截取字符串，获取到openId。
+                    window.openid = openId;
+                }
+            }
+            $("#openid").val(openid);
+        }
+    </script>
+</head>
+
+<body ontouchstart class="bd" onload="getCookie()">
+    <div class="page__body">
+        <div class="weui-cells__title">赛事详情</div>
+        <div class="weui-form-preview">
+            <div class="weui-form-preview__hd">
+                <label class="weui-form-preview__label">比赛名称</label>
+                <em class="weui-form-preview__value">{{name}}</em>
+            </div>
+            <div class="weui-form-preview__bd">
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">类别</label>
+                    <span class="weui-form-preview__value">{{category}}</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">时间</label>
+                    <span class="weui-form-preview__value">{{starttime}}</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">地点</label>
+                    <span class="weui-form-preview__value">{{city}}&nbsp;&nbsp;{{address}}</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">主办单位</label>
+                    <span class="weui-form-preview__value">{{master}}</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">参赛人数</label>
+                    <span class="weui-form-preview__value">已报名<span id="hasSubmitPersonCount"></span>人/限<span>{{personlimit}}</span>人</span>
+                </div>
+                <input type="hidden" id="saishiid" name="saishiid" value="{{id}}" />
+            </div>
+        </div>
+        <div class="weui-cells__title">报名信息</div>
+        <div class="weui-cells weui-cells_form" id="saishibaoming">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" id='category-picker' v-model="baoming.name" placeholder="请填写真实姓名" />
+                </div>
+            </div>
+
+            <div class="weui-cell weui-cell_select weui-cell_select-before">
+                <div class="weui-cell__hd">
+                    <select class="weui-select" name="select2" v-model="pretel">
+                      <option value="86">+86</option>
+                      <option value="80">+80</option>
+                      <option value="84">+84</option>
+                      <option value="87">+87</option>
+                    </select>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入手机号码" v-model="baoming.tel">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <textarea class="weui-textarea" placeholder="请输入您的需求" rows="3" v-model="baoming.remark" v-on:keyup="countchange"></textarea>
+                    <div class="weui-textarea-counter"><span v-text="remark_count"></span>/200</div>
+                </div>
+            </div>
+            <br/>
+            <label for="weuiAgree" class="weui-agree">
+              <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox" v-model="isAgreed"/>
+              <span class="weui-agree__text">
+                阅读并同意<a href="javascript:void(0);">《相关条款》</a>
+              </span>
+            </label>
+            <div class="weui-form-preview__ft">
+                <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:" v-on:click="save">报名</button>
+            </div>
+        </div>
+        <input type="text" id="openid" name="openid"/>
+    </div>
+    <script>
+        $(document).ready(function() {
+            var v_saishi = new Vue({
+                el: "#saishibaoming",
+                http: {
+                    timeout: 5000
+                },
+                data: {
+                    baoming: {
+                        saishiid: "",
+                        name: "",
+                        tel: "",
+                        remark: "我就是备注信息"
+                    },
+                    pretel: "86",
+                    isAgreed: false,
+                    remark_count: 0
+                },
+                created: function() {
+                    this.init();
+                },
+                methods: {
+                    init: function() {
+                        this.remark_count = this.$data.baoming.remark.length;
+                    },
+                    save: function() {
+                        if (this.$data.isAgreed) {
+                            $.showLoading();
+                            var that = this;
+                            this.$data.baoming.tel = this.$data.pretel + "-" + this.$data.baoming.tel;
+                            this.$data.baoming.saishiid = $("#saishiid").val();
+                            that.$resource("/api/baoming").save(this.$data.baoming).then(function(resp) {
+                                $.hideLoading();
+                                $.toptip('报名成功', 'success');
+                            }, function(resp) {
+                                $.hideLoading();
+                                $.toptip('报名失败', 'error');
+                            });
+                        } else {
+                            $.toast("确认《条约》", "cancel");
+                        }
+                    },
+                    countchange: function(e) {
+                        var that = this;
+                        var text = e.target.value;
+                        this.remark_count = this.$data.baoming.remark.length;
+                    }
+                }
+            });
+            window.v_saishi = v_saishi;
+        });
+    </script>
+</body>
+
+</html>

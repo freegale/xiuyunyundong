@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>赛事申办</title>
+    <script src="../js/common/jquery-1.11.2.min.js"></script>
+    <script src="../js/common/vue.min.js"></script>
+    <script src="../js/common/vue-resource.min.js"></script>
+    <script src="../js/common/jquery-weui.min.js"></script>
+
+    <script src="../js/common/city-picker.min.js"></script>
+    <script src="../js/common/swiper.min.js"></script>
+
+    <link rel="stylesheet" href="../css/common/weui.min.css" />
+    <link rel="stylesheet" href="../css/common/jquery-weui.min.css" />
+    <style>
+        .bd {
+            background-color: #fbfbfb;
+        }
+
+        .page__bd_btn {
+            padding: 15px;
+        }
+    </style>
+    <script>
+        function getCookie() {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("%26");
+                theRequest[strs[0].split("=")[0]] = (strs[0].split("=")[1]);
+            }
+            var code = theRequest["activityId"];
+
+            $.ajax( {
+              url:'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx4d339295eeeae22b&secret=b576360c50a127f7aeec2e664e37a0fc&code='+code+'&grant_type=authorization_code',// 跳转到 action ,
+              type:'get',
+              cache:false,
+              dataType:'json',
+              async:false, 
+              success:function(data) {
+                  if(data.msg =="true" ){
+                      // view("修改成功！");
+                      alert("修改成功！");
+                      window.location.reload();
+                  }else{
+                      view(data.msg);
+                  }
+               },
+               error : function() {
+                    // view("异常！");
+                    alert("异常！");
+               }
+              });
+        }
+    </script>
+</head>
+
+<body ontouchstart class="bd" onload="getCookie()">
+    <div class="page" id="saishishenban">
+        <div class="page__body">
+            <div class="weui-cells__title">基本信息</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">赛事分类</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" id='category-picker' v-model="saishi.category" />
+                    </div>
+                </div>
+
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">赛事名称</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" placeholder="请输入赛事名称" v-model="saishi.name">
+                    </div>
+                </div>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">主办单位</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" placeholder="请输入主办单位" v-model="saishi.master">
+                    </div>
+                </div>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label for="" class="weui-label">开赛日期</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" id='datetime-picker' v-model="saishi.starttime" />
+                        <script>
+                        </script>
+                    </div>
+                </div>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">人数限制</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入人数限制" v-model="saishi.personlimit">
+                    </div>
+                </div>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">费用/人次</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入费用" v-model="saishi.fee">
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">赛事地址</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">活动城市</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" id='city-picker' v-model="saishi.city" />
+                    </div>
+                </div>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <textarea class="weui-textarea" placeholder="请输入详细地址" rows="3" v-model="saishi.address" v-on:keyup="countchange"></textarea>
+                        <div class="weui-textarea-counter"><span v-text="address_count"></span>/200</div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">其它信息</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">协办单位</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" placeholder="请输入协办单位" v-model="saishi.submaster">
+                    </div>
+                </div>
+
+                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__hd">
+                        <label for="" class="weui-label">赛制</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" name="select2" v-model="saishi.gamerule">
+            <option value="1">3局2胜</option>
+            <option value="2">5局3胜</option>
+            <option value="3">7局4胜</option>
+          </select>
+                    </div>
+                </div>
+
+                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__hd">
+                        <label for="" class="weui-label">分组规则</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" name="select2" v-model="saishi.grouprule">
+            <option value="1">现场抽签</option>
+            <option value="2">报名顺序</option>
+          </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="page__bd page__bd_spacing page__bd_btn">
+            <a href="javascript:void(0)" v-on:click="create" class="weui-btn weui-btn_primary">提交申办</a>
+        </div>
+    </div>
+
+    </div>
+    <script>
+        $(document).ready(function() {
+            var v_saishi = new Vue({
+                el: "#saishishenban",
+                data: {
+                    saishi: {
+                        category: "乒乓球",
+                        name: "测试",
+                        master: "",
+                        starttime: "",
+                        personlimit: "24",
+                        fee: "20",
+                        city: "辽宁省 大连市 甘井子区",
+                        address: "",
+                        submaster: "",
+                        gamerule: "1",
+                        grouprule: "1"
+                    },
+                    address_count: 0
+                },
+                created: function() {
+                    this.init();
+                },
+                methods: {
+                    create: function() {
+                        $.showLoading();
+                        var that = this;
+                        that.$resource("/api/saishi").save(this.$data.saishi).then(function(resp) {
+                            $.hideLoading();
+                            $.toptip('申办成功', 'success');
+                        }, function(resp) {
+                            $.hideLoading();
+                            $.toptip('申办失败', 'error');
+                        });
+                    },
+                    countchange: function(e) {
+                        var that = this;
+                        var text = e.target.value;
+                        this.address_count = text.length;
+                    },
+                    init: function() {
+                        this.address_count = this.$data.saishi.address.length;
+                    }
+                }
+            });
+            window.v_saishi = v_saishi;
+        });
+
+        $(document).ready(function() {
+            $("#category-picker").picker({
+                title: "请选择赛事分类",
+                cols: [{
+                    textAlign: 'center',
+                    values: ['足球', '篮球', '排球', '台球', '羽毛球', '乒乓球', '田径', '柔道', '其它']
+                }]
+            });
+
+            $("#datetime-picker").datetimePicker();
+
+            $("#city-picker").cityPicker({
+                title: "请选择城市"
+            });
+        });
+    </script>
+</body>

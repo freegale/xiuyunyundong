@@ -6,5 +6,5 @@ module.exports = db.defineModel('user', {
         type: db.STRING(100),
         unique: true
     },
-    password: db.STRING(100)
+    password: db.STRING(400)
 });

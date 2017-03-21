@@ -23,8 +23,8 @@ const fs = require("mz/fs");
 
 const schedule = require("node-schedule");
 
-const weixinfilter = require("./filter/weixinauthenfilter");
-// const scheduleJob = require("./schedule/weixintokenupdate");
+const weixinauthenfilter = require("./filter/weixinauthenfilter");
+const scheduleJob = require("./schedule/weixintokenupdate");
 /*
 在生产环境中，静态资源通常都是由node之前的反向代理服务器提供的；
 而在开发环境中，通常不专门架设反向代理服务器，所以需要开发者自行处理静态资源
@@ -32,7 +32,7 @@ const weixinfilter = require("./filter/weixinauthenfilter");
 
 let templating = require("./controller/templating");
 
-app.use(weixinfilter);
+
 const isProduction = process.env.NODE_ENV === 'production';
 
 if (! isProduction) {
@@ -40,13 +40,11 @@ if (! isProduction) {
     app.use(staticFiles('/static/', __dirname + '/static'));
 }
 
-// $ GET /package.json
-app.use(serve('.'));
-
+app.use(bodyparser());
 
 // 处理日志记录
 app.use(async (ctx,next) => {
-  console.log(`Processing ${ctx.request.method} ${ctx.request.url}...`);
+  console.log(`Processing ${ctx.request.method} ${ctx.request.url} with body:${JSON.stringify(ctx.request.body)}`);
   var
         start = new Date().getTime(),
         execTime;
@@ -55,6 +53,11 @@ app.use(async (ctx,next) => {
     ctx.response.set('X-Response-Time', `${execTime}ms`);
   // await next();
 });
+
+// request processing filter chain
+app.use(weixinauthenfilter);  // 授权
+// $ GET /package.json
+app.use(serve('.'));
 
 /*
 // 聊天室应用——处理用户信息
@@ -65,7 +68,7 @@ app.use(async (ctx,next)=>{
 */
 app.use(rest.restify());
 app.use(templating());
-app.use(bodyparser());
+
 app.use(controller());
 
 // 在端口3000监听:

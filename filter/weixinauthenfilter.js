@@ -1,5 +1,8 @@
 "use strict"
 let crypto = require("crypto");
+let util = require("../util");
+const wexinapi = require("../api/wechatapi");
+const model = require("../model");
 
 let sha1 = (str)=>{
   var md5sum = crypto.createHash("sha1");
@@ -12,15 +15,17 @@ let processAuthen = async (ctx,next)=> {
   var params = ctx.query;
   console.log("请求信息："+JSON.stringify(ctx.request));
   console.log("参数信息："+JSON.stringify(ctx.query));
+  var openid = params.openid;
   var signature = params.signature;
-  if(signature){
+  if(signature&!openid){
     var echostr = params.echostr;
     var timestamp = params.timestamp;
     var nonce = params.nonce;
     var oriArray = new Array();
     oriArray[0] = nonce;
     oriArray[1] = timestamp;
-    oriArray[2] = "SI3TlR_s654d5y9rVsRTz1JxvK7pdDWKiradC_-5iu8erDp02eDbhceTHj0b2sfDqK3-l2mDxAK0LICDIHtvcg8EpzoCDLpogaf9fLza9AcatIvesa5A4tMdObvSDqEeWNJcAEAEVR"
+    oriArray[2] = util.getToken();
+    console.log("handle get token success:"+oriArray[2]);
     oriArray.sort();
     var original = oriArray.join("");
     console.log("original str :"+original);
@@ -34,15 +39,20 @@ let processAuthen = async (ctx,next)=> {
       ctx.response.body = false;
       console.log("Failed!");
     }
+  }else if(openid){
+    console.log("获取用户OpenId成功："+openid);
+    ctx.cookies.set("useropenid",openid);
+    // wexinapi.getUser(openid,async function(err,result){
+    //   console.log("获取用户信息成功："+JSON.stringify(result));
+    //   // 保存用户信息
+    //   var user = model.User;
+    //   await user.create({
+    //     name:result.openid,
+    //     password:""
+    //   });
+    // });
   }else{
-      let requestUrl = "https://"+ctx.request.header.host+ctx.request.url;
-      let redirectUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4d339295eeeae22b&redirect_uri="+requestUrl+"&response_type=code&scope=snsapi_userinfo&state=1&connect_redirect=1#wechat_redirect";
-      console.log(redirectUrl);
-      ctx.response.status = 301;
-      ctx.response.redirect(redirectUrl);
-      console.log("重定向完成！");
-      await next();
+    await next();
   }
-
 };
 module.exports = processAuthen;

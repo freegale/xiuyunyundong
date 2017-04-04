@@ -34,6 +34,7 @@
     "node-schedule": "1.2.0"
   },
   "devDependencies": {
-    "jquery-weui": "^1.0.1"
+    "jquery-weui": "^1.0.1",
+    "sync-request": "^4.0.1"
   }
 }

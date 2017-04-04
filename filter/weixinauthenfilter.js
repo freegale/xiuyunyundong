@@ -4,19 +4,19 @@ let util = require("../util");
 const wexinapi = require("../api/wechatapi");
 const model = require("../model");
 
+//
 let sha1 = (str)=>{
   var md5sum = crypto.createHash("sha1");
   md5sum.update(str);
   str = md5sum.digest("hex");
   return str;
 }
-
+// 校验微信网页授权，一般仅试用1次
 let processAuthen = async (ctx,next)=> {
   var params = ctx.query;
-  console.log("请求信息："+JSON.stringify(ctx.request));
-  console.log("参数信息："+JSON.stringify(ctx.query));
   var openid = params.openid;
   var signature = params.signature;
+  console.log("请求路径："+JSON.stringify(ctx.protocol+"://"+ctx.host+"/"+ctx.url));
   if(signature&!openid){
     var echostr = params.echostr;
     var timestamp = params.timestamp;
@@ -39,18 +39,6 @@ let processAuthen = async (ctx,next)=> {
       ctx.response.body = false;
       console.log("Failed!");
     }
-  }else if(openid){
-    console.log("获取用户OpenId成功："+openid);
-    ctx.cookies.set("useropenid",openid);
-    // wexinapi.getUser(openid,async function(err,result){
-    //   console.log("获取用户信息成功："+JSON.stringify(result));
-    //   // 保存用户信息
-    //   var user = model.User;
-    //   await user.create({
-    //     name:result.openid,
-    //     password:""
-    //   });
-    // });
   }else{
     await next();
   }

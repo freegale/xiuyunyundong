@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>所有赛事</title>
+    <script src="../js/common/jquery-1.11.2.min.js"></script>
+    <script src="../js/common/vue.min.js"></script>
+    <script src="../js/common/vue-resource.min.js"></script>
+    <script src="../js/common/jquery-weui.min.js"></script>
+
+    <script src="../js/common/city-picker.min.js"></script>
+    <script src="../js/common/swiper.min.js"></script>
+
+    <link rel="stylesheet" href="../css/common/weui.min.css" />
+    <link rel="stylesheet" href="../css/common/jquery-weui.min.css" />
+    <style>
+      .bd{
+        background-color:#fbfbfb;
+      }
+      .page__bd_btn{
+        padding:15px;
+      }
+    </style>
+</head>
+<body ontouchstart class="bd">
+<div class="page"  id="saishiliebiao">
+  <div class="weui-search-bar" id="searchBar">
+  <form class="weui-search-bar__form">
+    <div class="weui-search-bar__box">
+      <i class="weui-icon-search"></i>
+      <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="搜索" required="">
+      <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+    </div>
+    <label class="weui-search-bar__label" id="searchText">
+      <i class="weui-icon-search"></i>
+      <span>搜索</span>
+    </label>
+  </form>
+  <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
+</div>
+
+<div class="weui-cells">
+  <a v-for="saishi in saishis" class="weui-cell weui-cell_access" href="javascript:;" v-on:click="opendetail(saishi.id,$event)">
+    <div class="weui-cell__bd">
+      <p v-text="saishi.name"></p>
+    </div>
+    <div class="weui-cell__ft" v-text="saishi.category">
+
+    </div>
+  </a>
+</div>
+
+</div>
+<script>
+$(document).ready(function(){
+  var v_saishi = new Vue({
+    el:"#saishiliebiao",
+    http:{
+      timeout:5000
+    },
+    data:{
+      saishis:[]
+    },
+    created:function(){
+      this.init();
+    },
+    methods:{
+      init:function(){
+        var that=this;
+        that.loading = true;
+        that.$resource("/api/saishi").get().then(function(resp){
+          that.loading= false;
+          resp.json().then(function(result){
+            that.saishis = result;
+          });
+        },function(resp){
+          that.loading=false;
+          showError(resp);
+        })
+      },
+      opendetail:function(id,event){
+        window.location="/api/saishi/"+id;
+      }
+    }
+  });
+  window.v_saishi = v_saishi;
+});
+
+</script>
+</body>
+</html>

@@ -24,7 +24,9 @@ const fs = require("mz/fs");
 const schedule = require("node-schedule");
 
 const weixinauthenfilter = require("./filter/weixinauthenfilter");
+const weixinmenufilter= require("./filter/weixinmenufilter");
 const scheduleJob = require("./schedule/weixintokenupdate");
+const weixinusersavefilter = require("./filter/weixinusersavefilter");
 /*
 在生产环境中，静态资源通常都是由node之前的反向代理服务器提供的；
 而在开发环境中，通常不专门架设反向代理服务器，所以需要开发者自行处理静态资源
@@ -56,6 +58,8 @@ app.use(async (ctx,next) => {
 
 // request processing filter chain
 app.use(weixinauthenfilter);  // 授权
+app.use(weixinmenufilter);  //  页面授权
+app.use(weixinusersavefilter);
 // $ GET /package.json
 app.use(serve('.'));
 

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <style>
+        .bd {
+            background-color: #fbfbfb;
+        }
+
+        .page__bd_btn {
+            padding: 15px;
+        }
+    </style>
+</head>
+
+<body ontouchstart class="bd">
+    <div class="page">
+        <div class="page__body">
+            <div class="weui-cells__title">基本信息</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">赛事名称</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="g_name" class="weui-input" type="text" placeholder="请输入赛事名称">
+                    </div>
+                </div>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">主办单位</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="g_holder" class="weui-input" type="text" placeholder="请输入主办单位">
+                    </div>
+                </div>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label for="" class="weui-label">开赛日期</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="g_starttime" class="weui-input" type="text" id='datetime-picker' />
+                        <script>
+                        </script>
+                    </div>
+                </div>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">人数限制</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="g_personlimit" class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入人数限制">
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">赛事地址</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">活动城市</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="g_addr_city" class="weui-input" type="text" id='city-picker' />
+                    </div>
+                </div>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <textarea id="g_addr_detail" class="weui-textarea" placeholder="请输入详细地址" rows="3"></textarea>
+                        <div class="weui-textarea-counter"><span id="address_count"></span>/200</div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">其它信息</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">协办单位</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="g_sub_holders" class="weui-input" type="text" placeholder="请输入协办单位" v-model="saishi.submaster">
+                    </div>
+                </div>
+
+                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__hd">
+                        <label for="" class="weui-label">赛制</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" name="select2" id="g_rule">
+                          <option value="1">3局2胜</option>
+                          <option value="2">5局3胜</option>
+                          <option value="3">7局4胜</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__hd">
+                        <label for="" class="weui-label">分组规则</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" name="select2" id="group_rule">
+                          <option value="1">现场抽签</option>
+                          <option value="2">报名顺序</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="page__bd page__bd_spacing page__bd_btn">
+            <a href="javascript:void(0)" id="submit_btn" class="weui-btn weui-btn_primary">提交申办</a>
+        </div>
+        <input type="hidden" id="userid" name="useid" value="{{ userid }}">
+    </div>
+
+    </div>
+    <!-- body 最后 -->
+    <script src="//cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+
+    <!-- 如果使用了某些拓展插件还需要额外的JS -->
+    <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/swiper.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/city-picker.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#submit_btn").click(function() {
+                var g_info = {
+                    category: "台球",
+                    name: "test",
+                    master: "",
+                    starttime: "",
+                    personlimit: "24",
+                    fee: "20",
+                    city: "辽宁省 大连市 甘井子区",
+                    address: "",
+                    submaster: "",
+                    gamerule: "1",
+                    grouprule: "1"
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: "/api/saishi" ,
+                    data: g_info,
+                    success: function(data){
+                      console.log(data);
+                    },
+                    error:function(err){
+                      console.log(err);
+                    },
+                    dataType:"json"
+                });
+            });
+        });
+        $(document).ready(function() {
+            $("#g_starttime").datetimePicker();
+            $("#g_addr_city").cityPicker({
+                title: "请选择城市"
+            });
+        });
+    </script>
+</body>

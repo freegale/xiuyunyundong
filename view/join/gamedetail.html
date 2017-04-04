@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>{{ name }}</title>
+    <!-- head 中 -->
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <style>
+        .bd,
+        .weui-agree {
+            background-color: #fbfbfb;
+        }
+
+        .page__bd_btn {
+            padding: 15px;
+        }
+
+        .weui-agree {
+            display: block;
+            font-size: 13px;
+            padding: 0.5em 15px;
+        }
+    </style>
+</head>
+
+<body ontouchstart class="bd">
+    <div class="page__body">
+        <div class="weui-cells__title">基本信息</div>
+        <div class="weui-form-preview">
+            <div class="weui-form-preview__hd">
+                <label class="weui-form-preview__label">比赛名称</label>
+                <em class="weui-form-preview__value">{{name}}</em>
+            </div>
+            <div class="weui-form-preview__bd">
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">地点</label>
+                    <span class="weui-form-preview__value">{{city}}&nbsp;&nbsp;{{address}}</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">主办单位</label>
+                    <span class="weui-form-preview__value">{{master}}</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">参赛人数</label>
+                    <span class="weui-form-preview__value">已报名<span id="hasSubmitPersonCount"></span>人/限<span>{{personlimit}}</span>人</span>
+                </div>
+            </div>
+        </div>
+        <div class="weui-cells__title">已报名用户</div>
+        <div class="weui-cells weui-cells_form">
+          <div class="weui-cell">
+            <div class="weui-cell__bd">
+              <div class="weui-uploader">
+                <div class="weui-uploader__bd">
+                  <ul class="weui-uploader__files" id="userlist">
+
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="weui-cells__title">我要报名</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" id='j_name' placeholder="请填写真实姓名" />
+                </div>
+            </div>
+
+            <div class="weui-cell weui-cells_form">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">电话</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" id="j_tel" type="number" pattern="[0-9]*" placeholder="请输入手机号码">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <textarea class="weui-textarea" placeholder="请输入您的需求" rows="3" id="j_remark"></textarea>
+                    <div class="weui-textarea-counter"><span v-text="remark_count">0</span>/200</div>
+                </div>
+            </div>
+            <br/>
+            <label for="weuiAgree" class="weui-agree">
+              <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox"/>
+              <span class="weui-agree__text">
+                阅读并同意<a href="javascript:void(0);">《相关条款》</a>
+              </span>
+            </label>
+            <div class="weui-form-preview__ft">
+                <button id="submit_btn" type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:">报名</button>
+            </div>
+        </div>
+        <span id="hiddenarea">
+          <input type="hidden" id="j_openid" name="j_openid" value='{{ openid }}'/>
+          <input type="hidden" id="j_saishiid" name="j_saishiid" value='{{ id }}'/>
+        </span>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <div class="weui-footer">
+      <p class="weui-footer__links">
+        <a href="javascript:void(0);" class="weui-footer__link">修韵恒创</a>
+        <a href="javascript:void(0);" class="weui-footer__link">大连理工台球协会</a>
+      </p>
+      <p class="weui-footer__text">Copyright © 2008-2017</p>
+    </div>
+    <!-- body 最后 -->
+    <script src="//cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+
+    <!-- 如果使用了某些拓展插件还需要额外的JS -->
+    <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/swiper.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/city-picker.min.js"></script>
+    <script>
+    $(document).ready(function(){
+      $("#submit_btn").click(function(){
+        var j_info = {
+            name: $("#j_name").val(),
+            tel: $("#j_tel").val(),
+            remark: $("#j_remark").val(),
+            saishiid: $("#j_saishiid").val(),
+            openid:$("#j_openid").val()
+        };
+        $.ajax({
+            type: 'POST',
+            url: "/api/baoming" ,
+            data: j_info,
+            success: function(data){
+              console.log(data);
+            },
+            error:function(err){
+              console.log(err);
+            },
+            dataType:"json"
+        });
+      });
+      // 获取当前赛事的报名用户列表
+      $.ajax({
+          type: 'GET',
+          url: "/api/baoming/userlist" ,
+          data: {
+            saishiid:$("#j_saishiid").val()
+          },
+          success: function(data){
+            $("#userlist").empty();
+            for(var i=0,j=data.length;i<j;i++){
+              var user  = data[i];
+              var userObj = $('<li class="weui-uploader__file weui-uploader__file_status" style="background-image:url('+user.headimgurl+')"></li>');
+              $("#userlist").append(userObj);
+            }
+          },
+          error:function(err){
+            console.log(err);
+          },
+          dataType:"json"
+      });
+
+    });
+    </script>
+</body>
+
+</html>

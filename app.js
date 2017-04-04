@@ -76,7 +76,7 @@ app.use(templating());
 app.use(controller());
 
 // 在端口3000监听:
-let server = app.listen(8080);
+let server = app.listen(80);
 
 /*
 // 创建web socket server
@@ -199,4 +199,4 @@ var onConnection = function(ws){
 
 app.wss = createWebSocketServer(server,onConnection,onMessage,onClose);
 */
-console.log('app started at port 8080...');
+console.log('app started at port 80...');

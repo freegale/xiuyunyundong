@@ -16,6 +16,17 @@ let fn_create_baoming = async (ctx,next)=>{
   ctx.rest(baoming);
 };
 
+let fn_delete_baoming = async(ctx,next)=>{
+  let BaoMing = model.BaoMing;
+  let openid = ctx.query.openid;
+  await BaoMing.destroy({
+    where:{
+      creator:openid
+    }
+  });
+  ctx.rest(openid);
+}
+
 let fn_get_userlist = async(ctx,next)=>{
   let BaoMing = model.BaoMing,baoming;
   let saishiid = ctx.query.saishiid;
@@ -54,5 +65,6 @@ let fn_get_userlist = async(ctx,next)=>{
 
 module.exports = {
   "POST /api/baoming":fn_create_baoming,
-  "GET /api/baoming/userlist":fn_get_userlist
+  "GET /api/baoming/userlist":fn_get_userlist,
+  "DELETE /api/baoming":fn_delete_baoming
 };

@@ -58,8 +58,8 @@ app.use(async (ctx,next) => {
 
 // request processing filter chain
 app.use(weixinauthenfilter);  // 授权
-app.use(weixinmenufilter);  //  页面授权
-app.use(weixinusersavefilter);
+// app.use(weixinmenufilter);  //  页面授权
+// app.use(weixinusersavefilter);
 // $ GET /package.json
 app.use(serve('.'));
 
@@ -76,7 +76,7 @@ app.use(templating());
 app.use(controller());
 
 // 在端口3000监听:
-let server = app.listen(80);
+let server = app.listen(8080);
 
 /*
 // 创建web socket server
@@ -199,4 +199,4 @@ var onConnection = function(ws){
 
 app.wss = createWebSocketServer(server,onConnection,onMessage,onClose);
 */
-console.log('app started at port 80...');
+console.log('app started at port 8080...');

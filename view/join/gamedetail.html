@@ -23,6 +23,16 @@
             font-size: 13px;
             padding: 0.5em 15px;
         }
+        .weui-uploader__file_status::before{
+          background-color: rgba(255, 255, 255, 0);
+        }
+
+        .weui-uploader__file {
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            border-radius: 50px;
+        }
     </style>
 </head>
 
@@ -45,7 +55,7 @@
                 </div>
                 <div class="weui-form-preview__item">
                     <label class="weui-form-preview__label">参赛人数</label>
-                    <span class="weui-form-preview__value">已报名<span id="hasSubmitPersonCount"></span>人/限<span>{{personlimit}}</span>人</span>
+                    <span class="weui-form-preview__value">已报名<span id="hasSubmitPersonCount">0</span>人/限<span>{{personlimit}}</span>人</span>
                 </div>
             </div>
         </div>
@@ -63,8 +73,8 @@
             </div>
           </div>
         </div>
-        <div class="weui-cells__title">我要报名</div>
-        <div class="weui-cells weui-cells_form">
+        <div class="weui-cells__title" id="baomingtitle">我要报名</div>
+        <div class="weui-cells weui-cells_form" id="baomingform">
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
                 <div class="weui-cell__bd">
@@ -74,27 +84,26 @@
 
             <div class="weui-cell weui-cells_form">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">电话</label>
+                    <label class="weui-label">手机</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" id="j_tel" type="number" pattern="[0-9]*" placeholder="请输入手机号码">
+                    <input class="weui-input" id="j_tel" type="number" pattern="^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$" placeholder="请输入11位手机号码">
                 </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    <textarea class="weui-textarea" placeholder="请输入您的需求" rows="3" id="j_remark"></textarea>
-                    <div class="weui-textarea-counter"><span v-text="remark_count">0</span>/200</div>
+                    <textarea class="weui-textarea" placeholder="请输入您的建议" rows="3" id="j_remark"></textarea>
                 </div>
             </div>
             <br/>
-            <label for="weuiAgree" class="weui-agree">
-              <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox"/>
-              <span class="weui-agree__text">
-                阅读并同意<a href="javascript:void(0);">《相关条款》</a>
-              </span>
-            </label>
+            <br/>
             <div class="weui-form-preview__ft">
                 <button id="submit_btn" type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:">报名</button>
+            </div>
+        </div>
+        <div class="weui-cells weui-cells_form" id="tuisaiform" style="display:none;">
+            <div class="weui-form-preview__ft">
+                <button id="submit_btn" type="tuisai_btn" class="weui-form-preview__btn weui-form-preview__btn_error" href="javascript:">退赛</button>
             </div>
         </div>
         <span id="hiddenarea">
@@ -105,6 +114,321 @@
     <br/>
     <br/>
     <br/>
+
+    <div class="weui-cells__title">赛事细则</div>
+
+    <p align="center" style="text-align: center; line-height: 19.2pt; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <strong>
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142">
+    主办方</span></strong></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important">
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">
+    大连理工大学机械社团联合会</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <strong>
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142">
+    协办方</span></strong></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">
+    校研究生标杆台球协会<span lang="EN-US"><br>
+    <br>
+    　</span></span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    承办方</span></strong></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    大连青苹果台球厅</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    怡尼网吧台球厅<span lang="EN-US"><br>
+    <br>
+    　</span></span></p>
+    <span style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    冠名赞助单位</span></strong></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    大连修韵恒创科技有限公司</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">　</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142">
+    媒体支持<span lang="EN-US">&nbsp;</span></span></strong></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    JJ</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">台球
+    微信公众号</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    企鹅直播</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">　</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    比赛项目</span></strong></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: white; background: #FF2941">
+    中式台球个人赛</span></strong></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; word-spacing: 0px; margin-left: 105.0pt; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    1</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、比赛规则采用中国台球协会颁发的最新的台球规则；</span></p>
+    <p style="line-height: 19.2pt; margin-left: 105.0pt; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    2</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、比赛采用单败淘汰制<span lang="EN-US">:</span>初赛第一轮采用<span lang="EN-US">3</span>局<span lang="EN-US">2</span>胜制</span></p>
+    <p style="line-height: 19.2pt; margin-left: 147.0pt; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    其余采用<span lang="EN-US">5</span>局三胜制；</span></p>
+    <p style="line-height: 19.2pt; margin-left: 147.0pt; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    决赛采用<span lang="EN-US">7</span>局<span lang="EN-US">4</span>胜制；</span></p>
+    <p style="line-height: 19.2pt; margin-left: 105.0pt; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    3</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、选手比赛顺序由报名顺序直接决定。</span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">　</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142">
+    竞赛时间和地点</span></strong></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; background: white">
+    <a name="_Toc300114354">
+    <span style="font-family: 微软雅黑,sans-serif; color: #76777B"><b>
+    <span style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    活动时间：</span></b></span></a></p>
+    <span style="font-family: 微软雅黑,sans-serif; color: #76777B">
+    <p style="line-height: 19.2pt; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <b><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: red">初赛：<span lang="EN-US">4</span>月<span lang="EN-US">15</span>日</span><span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: red">
+    9:00 </span>
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: red">开始</span></b></p>
+    <p style="line-height: 19.2pt; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <b><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: red">决赛：<span lang="EN-US">4</span>月<span lang="EN-US">16</span>日<span lang="EN-US">
+    9:00 </span>开始</span></b></p>
+    <p style="line-height: 19.2pt; background: white"><b>活动地点：</b></p>
+    <p style="line-height: 19.2pt; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <b>
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    本科生组初赛<span lang="EN-US">:</span>西门外青苹果台球厅</span></b></p>
+    <p style="line-height: 19.2pt; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <b>
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    研究生组初赛<span lang="EN-US">:B</span>区二舍楼下怡尼网吧<span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+    </span></b></p>
+    <p style="line-height: 19.2pt; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <b>
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    决赛：西门外青苹果台球厅</span></b></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">　</span></span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    参赛资格</span></strong></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    　　年龄在<span lang="EN-US">14-70</span>周岁之间健康公民不限国籍、性别、民族和宗教信仰均可报名参加。 </span>
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">　</span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span lang="EN-US" style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">
+    <br style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important">
+    <br>
+    　</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; white-space: pre-wrap; overflow-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142">
+    报名方法</span></strong></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    现场报名：自本赛程公布之日起，至<span lang="EN-US">2017</span>年<span lang="EN-US">4</span>月<span lang="EN-US">14</span>日<span lang="EN-US">18</span>时截止。</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    关注“<span lang="EN-US">JJ</span>台球”，</p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    本科生选择本科生入口，填报个人报名信息；</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    研究生及博士生选择研究生入口，填报个人报名信息；</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">　</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142">
+    参赛费</span></strong></span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    参赛费：<span lang="EN-US">20</span>元／人</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">　</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142">
+    抽签须知</span></strong></span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; background: white">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    &nbsp;(</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">一）参赛选手须服从赛会统一安排，严格遵守赛会规定的会议、活动、比赛时间；</span></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    （二）参赛选手须在比赛开始前<span lang="EN-US">10</span>分钟到场检录，裁判长宣布比赛开始后，未到场的选手视为弃权，有两场以上弃权的选手（含两场），取消继续比赛资格；</span></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    （三）对当值裁判裁决不服的申诉需在判罚后双方选手下一击出杆前提出，否则不予受理；</span></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    （四）参赛选手在比赛场地内严禁吸烟，比赛期间严禁饮酒、赌博或进行其它不良行为；</span></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    （五）赛场周围观众、领队、选手在赛时均需保持安静。比赛中任何人不得和比赛球员进行任何形式的交流，否则裁判员有权制止、警告直至判罚出场；若比赛球员多次进行交流，则裁判员在警告无效的情况下，有权判罚比赛输局；</span></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    （六）参赛选手须尊重对方、尊重裁判、尊重观众；</span></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    （七）违反上述要求者，将被取消参赛资格。</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <a name="_Toc277510582"><strong>
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142">
+    突发事件及应急预案</span></strong></a></p>
+    <p style="line-height: 19.2pt; background: white"><a name="_Toc277510583"><b>
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    1. </span></b></a><b>
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    因恶劣天气及赛场秩序混乱造成的比赛中断 。</span></b></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    因恶劣天气及赛场秩序混乱造成比赛无法正常如期进行，我们会采取积极的措施尽量恢复比赛，由组委会执行主任做出是否恢复比赛的决定，裁判员、双方球队应服从执行主任的决定<span lang="EN-US">:</span></span></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    （一）如比赛不能在半小时内恢复，由执行主任做出中断比赛的决定： 宣布观众退场、双方球队撤离赛场；由执行主任征求各方意见后决定在<span lang="EN-US">24</span>小时内的何时、何地进行补赛；
+    比赛中断前成绩有效，补赛从比赛中断处之后恢复。<span lang="EN-US"> </span></span></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    （二）比赛如不能在<span lang="EN-US">24</span>小时内进行补赛：经执行主任书面同意，球队、裁判员离开赛区；
+    执行主任报告台球协会，由台球协会及赛事组委会做出处理决定； 由校社团中心做出的决定为最终决定。<span lang="EN-US"> </span>
+    </span></p>
+    <p style="line-height: 19.2pt; background: white"><a name="_Toc277510584"><b>
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    2.</span></b></a><b><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">参赛人数过多或过少影响预定赛制</span></b></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    &nbsp;&nbsp;&nbsp; &nbsp;</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">我们举办此次台球友谊赛的目的是为了让广大同学通过此次比赛在切磋球技的同时，能够愉悦自身，强化各院系同学间的友谊。因此，对于参与此次比赛的同学我们本着全心全意服务的原则，尽量让每一位同学都能参与。对于参赛人数过多或过少影响预定赛制的问题，我们会尽最大努力在最短时间内制定出新的符合公平、公正原则的新赛制，并在报校社团中心审批后通知参赛选手，尽量不影响比赛赛程。</span></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    注：本科生组暂定报名人数为<span lang="EN-US">64</span>人，报满截止；</span></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    若报名人数为不足<span lang="EN-US">64</span>人的偶数时，则在出现奇数选手时设置轮空签；</span></p>
+    <p style="line-height: 19.2pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    若报名人数为不足<span lang="EN-US">64</span>人的奇数时，赛前设置一名选手自动补位。</span></p>
+    <p style="line-height: 19.2pt; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">　</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142">
+    竞赛办法</span></strong></span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    1</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、比赛规则采用中国台球协会最新实行《中式台球比赛规则》；</span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    2</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、比赛摆球采用三角框器材摆球方式；</span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    3</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、禁止故意犯规，故意犯规一次警告，故意犯规二次判负一局，故意犯规三次判负整场比赛；</span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">　</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142">
+    奖项设置</span></strong></span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    冠　　军：现金<span lang="EN-US">300</span>元<span lang="EN-US"> + </span>奖杯<span lang="EN-US">
+    +</span>证书</span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    亚　　军：现金<span lang="EN-US">200</span>元<span lang="EN-US"> + </span>证书</span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">季<span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </span>军：现金<span lang="EN-US">100</span>元<span lang="EN-US"> + </span>证书</span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span>
+    <span style="font-size: 11pt; font-family: 微软雅黑,sans-serif; color: #76777B; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    4 - 16 </span><font face="微软雅黑,sans-serif"><span style="font-size: 11pt">名：奖 状</span></font></span></p>
+    <p align="center" style="text-align: start; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <strong>
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142">
+    仲裁、裁判人员</span></strong></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    由大连理工大学台球协会选派</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">　</span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <strong style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    <span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #D92142">
+    参赛要求</span></strong></span></p>
+    <p align="center" style="text-align: center; line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; overflow-wrap: break-word !important; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span lang="EN-US" style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">
+    &nbsp;</span></p>
+    <p style="line-height: 19.5pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; background-size: initial; background-origin: initial; background-clip: initial; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white url('../initial') initial initial initial 50%">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    1</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、遵守赛会各项规定，服从赛会各项安排，尊重裁判和对手；</span></p>
+    <p style="line-height: 19.5pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; background-size: initial; background-origin: initial; background-clip: initial; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white url('../initial') initial initial initial 50%">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    2</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、参赛球员须在赛前<span lang="EN-US">20</span>分钟到检录处报到，赛前<span lang="EN-US">5</span>分钟到达比赛场地入口，由裁判员带领参赛球员进入比赛场地；裁判长宣布比赛开始后<span lang="EN-US">5</span>分钟未到场的选手将判负一局，<span lang="EN-US">10</span>分钟后仍未到场将视为弃权；</span></p>
+    <p style="line-height: 19.5pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; background-size: initial; background-origin: initial; background-clip: initial; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white url('../initial') initial initial initial 50%">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    3</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、参赛选手须按赛会规定着装，男子选手必须着正装参赛，上身穿衬衫或有领<span lang="EN-US">T</span>恤，下身穿黑色或深色长裤，不允许穿凉鞋或拖鞋；女子选手可着时装，服装优雅、得体、大方；服装不符合要求者禁止参赛；</span></p>
+    <p style="line-height: 19.5pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; background-size: initial; background-origin: initial; background-clip: initial; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white url('../initial') initial initial initial 50%">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    4</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、对当值裁判裁决不服的申诉需在判罚后双方选手下一击前由当事人本人提出，否则不予受理；如对裁判员的判罚有异议，可向裁判长进行申诉，裁判长的决定为最终决定；</span></p>
+    <p style="line-height: 19.5pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; background-size: initial; background-origin: initial; background-clip: initial; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white url('../initial') initial initial initial 50%">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    5</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、参赛选手参加比赛期间，未经组委会批准不得参加商业赛事和宣传活动，选手佩带的商业标识须佩带在左右胸前，自主商业标志数量不超过<span lang="EN-US">1</span>块；</span></p>
+    <p style="line-height: 19.5pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; background-size: initial; background-origin: initial; background-clip: initial; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white url('../initial') initial initial initial 50%">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    6</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、比赛场馆内禁止吸烟，参赛球员禁止携带移动电话进入场地，在比赛进行中禁止场外指导，如出现违反赛会规定和不文明的行为，裁判员应给予警告，再次出现判罚技术犯规；</span></p>
+    <p style="line-height: 19.5pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; background-size: initial; background-origin: initial; background-clip: initial; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white url('../initial') initial initial initial 50%">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    7</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、严禁酗酒和任何形式的赌博行为，严禁任何违法乱纪和有悖道德伦理的行为，违反者将被取消参赛资格；</span></p>
+    <p style="line-height: 19.5pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; background-size: initial; background-origin: initial; background-clip: initial; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white url('../initial') initial initial initial 50%">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    8</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、对于不遵守赛会规定的球员，第一次出现按违反体育道德行为警告一次，第二次出现判负一局，第三次出现取消比赛资格；</span></p>
+    <p style="line-height: 19.5pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; background-size: initial; background-origin: initial; background-clip: initial; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white url('../initial') initial initial initial 50%">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    9</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、参赛运动员必需佩戴赛事组委会指定标识，并妥善保管，直至颁奖完毕，如有丢失不予颁奖；</span></p>
+    <p style="line-height: 19.5pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; background-size: initial; background-origin: initial; background-clip: initial; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white url('../initial') initial initial initial 50%">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    10</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、赛中严禁任何形式的假球行为，大赛组委会设立赛事打假委员会，打假委员会有权根据比赛进行情况、比赛录像、裁判员反映等线索，经集体研究后对假球行为进行裁决及处罚（裁决方法：按照少数服从多数原则），一经认定，涉假人员将被列入“黑名单”
+    上报大赛组委会予以其相应处罚；</span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span lang="EN-US" style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">
+    11</span><span style="font-size: 10.5pt; font-family: 微软雅黑,sans-serif; color: #76777B">、比赛期间所有参赛选手须自行办理人身伤害意外保险，如未办理人身保险如在比赛期间发生任何意外组委会概不负责，来参赛视同接受本规定。</span></p>
+    <p style="line-height: 19.2pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; text-align: start; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white">
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E">　</span></p>
+    <p align="center" style="text-align: center; line-height: 19.5pt; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; min-height: 1em; orphans: auto; widows: 1; -webkit-text-stroke-width: 0px; white-space: pre-wrap; background-size: initial; background-origin: initial; background-clip: initial; word-spacing: 0px; margin-left: 0cm; margin-right: 0cm; margin-top: 0cm; margin-bottom: .0001pt; background: white url('../initial') initial initial initial 50%">
+    <span style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #3E3E3E; max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important; overflow-wrap: break-word !important">
+    本竞赛规程最终解释权属大连理工大学台球协会所有，未尽事宜另行通知。</span><span lang="EN-US" style="font-size: 10.0pt; font-family: 微软雅黑,sans-serif; color: #D92142"><b><br style="max-width: 100%; box-sizing: border-box !important; word-wrap: break-word !important">
+    <br>
+    　</b></span></p>
+    <p class="MsoNormal"><span lang="EN-US">&nbsp;</span></p>
+    </span></span></span></span>
+
     <div class="weui-footer">
       <p class="weui-footer__links">
         <a href="javascript:void(0);" class="weui-footer__link">修韵恒创</a>
@@ -120,6 +444,11 @@
     <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/swiper.min.js"></script>
     <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/city-picker.min.js"></script>
     <script>
+    var submittedinit = function(){
+      $("#baomingform").hide();
+      $("#baomingtitle").text("我要退赛");
+      $("#tuisaiform").show();
+    }
     $(document).ready(function(){
       $("#submit_btn").click(function(){
         var j_info = {
@@ -134,15 +463,32 @@
             url: "/api/baoming" ,
             data: j_info,
             success: function(data){
-              console.log(data);
+              $.toptip('报名成功', 'success');
             },
             error:function(err){
-              console.log(err);
+              $.toptip('报名失败', 'error');
             },
             dataType:"json"
         });
       });
+      $("#tuisai_btn").click(function(){
+        $.ajax({
+            type: 'DELETE',
+            url: "/api/baoming" ,
+            data: {
+              openid:$("#j_openid").val()
+            },
+            success: function(data){
+              $.toptip('退赛成功，请刷新页面', 'success');
+            },
+            error:function(err){
+              $.toptip('退赛失败', 'error');
+            },
+            dataType:"text"
+        });
+      });
       // 获取当前赛事的报名用户列表
+      var isSubmitted = false;
       $.ajax({
           type: 'GET',
           url: "/api/baoming/userlist" ,
@@ -151,8 +497,12 @@
           },
           success: function(data){
             $("#userlist").empty();
+            $("#hasSubmitPersonCount").text(data.length);
             for(var i=0,j=data.length;i<j;i++){
               var user  = data[i];
+              if(user.openid==$("#j_openid").val()){
+                isSubmitted == true;
+              }
               var userObj = $('<li class="weui-uploader__file weui-uploader__file_status" style="background-image:url('+user.headimgurl+')"></li>');
               $("#userlist").append(userObj);
             }
@@ -162,7 +512,6 @@
           },
           dataType:"json"
       });
-
     });
     </script>
 </body>
